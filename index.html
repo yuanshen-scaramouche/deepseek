@@ -1,213 +1,450 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>你好呀，欢迎来到下载世界</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", sans-serif;
-      background: linear-gradient(to right, #8e2de2, #4a00e0);
-      color: white;
-      text-align: center;
-    }
-
-    h1 {
-      margin-top: 40px;
-      font-size: 2.5em;
-      animation: fadeIn 2 ease-in-out;
-    }
-
-    h2 {
-      font-weight: normal;
-      animation: fadeIn 3 ease-in-out;
-    }
-
-    canvas {
-      margin-top: 20px;
-      background: black;
-      border: 2px solid white;
-    }
-
-    #retryBtn {
-      display: none;
-      margin: 20px auto;
-      padding: 10px 20px;
-      font-size: 18px;
-      border: none;
-      border-radius: 6px;
-      background-color: #ff4081;
-      color: white;
-      cursor: pointer;
-    }
-
-    #retryBtn:hover {
-      background-color: #e91e63;
-    }
-
-    .controls {
-      margin-top: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .control-row {
-      display: flex;
-      justify-content: center;
-      margin: 5px 0;
-    }
-
-    .ctrl-btn {
-      width: 60px;
-      height: 60px;
-      margin: 5px;
-      font-size: 24px;
-      border: none;
-      border-radius: 10px;
-      background-color: #ffffff33;
-      color: white;
-      cursor: pointer;
-    }
-
-    .ctrl-btn:active {
-      background-color: #ffffff55;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 7 ISO 下载页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            color: #ffcc00;
+        }
+        
+        h2 {
+            font-size: 1.6rem;
+            margin: 15px 0;
+            color: #4dff4d;
+        }
+        
+        h3 {
+            font-size: 1.3rem;
+            margin: 15px 0 10px;
+            color: #ff9966;
+        }
+        
+        .download-section {
+            background: rgba(30, 30, 60, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .status-bar {
+            height: 30px;
+            background: #333;
+            border-radius: 15px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #4dff4d, #00ccff);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .info-box {
+            background: rgba(40, 40, 80, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 5px solid #ffcc00;
+        }
+        
+        .warning {
+            background: rgba(120, 40, 40, 0.8);
+            border-left: 5px solid #ff4d4d;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+        }
+        
+        #gameCanvas {
+            background: black;
+            border-radius: 10px;
+            border: 3px solid #00ccff;
+            margin-bottom: 20px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .control-row {
+            display: flex;
+            justify-content: center;
+            margin: 5px 0;
+        }
+        
+        .ctrl-btn {
+            width: 70px;
+            height: 70px;
+            margin: 5px;
+            font-size: 28px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(0, 204, 255, 0.3);
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .ctrl-btn:active {
+            background: rgba(0, 204, 255, 0.8);
+            transform: scale(0.95);
+        }
+        
+        #retryBtn {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 18px;
+            background: #ff4081;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        #retryBtn:hover {
+            background: #e91e63;
+            transform: scale(1.05);
+        }
+        
+        .instructions {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(40, 60, 40, 0.8);
+            border-radius: 10px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            color: #cccccc;
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .ctrl-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+            
+            #gameCanvas {
+                width: 300px;
+                height: 300px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>你好</h1>
-  <h2>正在准备下载windows7 iso文件...</h2>
-  <h2>我们会自动为您下载，请稍后...</h2>
-  <h2>您也可以玩一玩下方的小游戏来打发等待的无聊时间</h2>
-  <h2>您也可以自行寻找下载直链，详情见下方。也可以添加510160951的QQ询问</h2>
-  <h2>方法：打开开发者工具（F12）点击网络，刷新一下网页，然后按 ctrl + F 寻找。  <!-- 隐藏的下载链接 --><a id="downloadLink href= "文件下载直链" 类似这样的开头，如果您手动下载，建议开启代理"</h2>
-
-  <!-- 隐藏的下载链接 -->
-  <a id="downloadLink"
-     href="https://d.pcs.baidu.com/file/7e6d349c5lc4f6365a33329e762d885d?fid=3490631771-250528-605263497833319&rt=pr&sign=FDtAERK-DCb740ccc5511e5e8fedcff06b081203-Qvm3nzDdIIWgof5EgjNBRrf1lA0%3D&expires=8h&chkbd=0&chkv=0&dp-logid=1525600366249664592&dp-callid=0&dstime=1755669031&r=769491368&vuk=3490631771&origin_appid=15195230&file_type=0&access_token=123.84043cbaad95cf21a5c07404ce39d9d9.YQ0rr35kouEu-ATDunIPI3rLuskNOVffgPpWNi-.5g7gMQ" <!--https://api.pinduoduo.com/api/app/channel/pinduoduo_main_baidu_seo/all-->
-     download
-     style="display: none;">
-    下载链接
-  </a>
-
-  <!-- 游戏画布 -->
-  <canvas id="gameCanvas" width="300" height="300"></canvas>
-
-  <!-- 再来一次按钮 -->
-  <button id="retryBtn" onclick="restartGame()">再来一次</button>
-
-  <!-- 触屏控制按钮 -->
-  <div class="controls">
-    <div class="control-row">
-      <button class="ctrl-btn" onclick="setDirection('UP')">↑</button>
+    <div class="container">
+        <header>
+            <h1>Windows 7 ISO 下载中心</h1>
+            <h2>安全、高速、完整的系统镜像</h2>
+        </header>
+        
+        <section class="download-section">
+            <h2>下载准备中...</h2>
+            <div class="status-bar">
+                <div class="progress" id="progressBar"></div>
+                <div class="progress-text" id="progressText">0%</div>
+            </div>
+            
+            <div class="info-box">
+                <p>正在验证您的网络连接并准备下载链接...</p>
+            </div>
+            
+            <div class="info-box warning">
+                <h3>重要提示：用户代理设置</h3>
+                <p>由于服务器限制，直接下载可能失败。请使用 <strong>KinhDown</strong> 或其他支持自定义用户代理的下载工具。</p>
+                <p>所需用户代理字符串：<code>KinhDown/2.0.5 (Windows NT 10.0; Win64; x64)</code></p>
+            </div>
+            
+            <div class="instructions">
+                <h3>如何设置用户代理：</h3>
+                <ol>
+                    <li>下载并安装 <strong>KinhDown</strong> 或类似下载工具</li>
+                    <li>在工具设置中找到「用户代理」或「UA」选项</li>
+                    <li>将上述代理字符串复制到输入框中</li>
+                    <li>保存设置并重新启动下载</li>
+                    <li>如果仍有问题，请添加 QQ: 510160951 咨询</li>
+                </ol>
+            </div>
+        </section>
+        
+        <section class="game-container">
+            <h2>等待时玩个小游戏</h2>
+            <p>使用方向键或下方按钮控制蛇的移动</p>
+            
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+            
+            <div class="controls">
+                <div class="control-row">
+                    <button class="ctrl-btn" onclick="setDirection('UP')">↑</button>
+                </div>
+                <div class="control-row">
+                    <button class="ctrl-btn" onclick="setDirection('LEFT')">←</button>
+                    <button class="ctrl-btn" onclick="setDirection('DOWN')">↓</button>
+                    <button class="ctrl-btn" onclick="setDirection('RIGHT')">→</button>
+                </div>
+            </div>
+            
+            <button id="retryBtn" onclick="restartGame()">重新开始游戏</button>
+        </section>
+        
+        <footer>
+            <p>© 2023 Windows 7 ISO 下载页面 | 仅供学习与研究用途 | 下载后请在24小时内删除</p>
+        </footer>
     </div>
-    <div class="control-row">
-      <button class="ctrl-btn" onclick="setDirection('LEFT')">←</button>
-      <button class="ctrl-btn" onclick="setDirection('DOWN')">↓</button>
-      <button class="ctrl-btn" onclick="setDirection('RIGHT')">→</button>
-    </div>
-  </div>
 
-  <script>
-    let canvas, ctx, box = 10;
-    let snake, food, direction, game;
-
-    window.onload = function () {
-      document.getElementById('downloadLink').click();
-      initGame();
-    };
-
-    function initGame() {
-      canvas = document.getElementById('gameCanvas');
-      ctx = canvas.getContext('2d');
-      direction = "RIGHT";
-      snake = [{x: 50, y: 50}];
-      food = {
-        x: Math.floor(Math.random() * 30) * box,
-        y: Math.floor(Math.random() * 30) * box
-      };
-      document.addEventListener("keydown", dirChange);
-      game = setInterval(draw, 100);
-    }
-
-    function dirChange(e) {
-      const key = e.key;
-      if (key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
-      else if (key === "ArrowUp" && direction !== "DOWN") direction = "UP";
-      else if (key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
-      else if (key === "ArrowDown" && direction !== "UP") direction = "DOWN";
-    }
-
-    function setDirection(dir) {
-      if (dir === "LEFT" && direction !== "RIGHT") direction = "LEFT";
-      if (dir === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
-      if (dir === "UP" && direction !== "DOWN") direction = "UP";
-      if (dir === "DOWN" && direction !== "UP") direction = "DOWN";
-    }
-
-    function draw() {
-      ctx.fillStyle = "black";
-      ctx.fillRect(0, 0, 300, 300);
-
-      for (let i = 0; i < snake.length; i++) {
-        ctx.fillStyle = i === 0 ? "lime" : "lightgreen";
-        ctx.fillRect(snake[i].x, snake[i].y, box, box);
-      }
-
-      ctx.fillStyle = "red";
-      ctx.fillRect(food.x, food.y, box, box);
-
-      let headX = snake[0].x;
-      let headY = snake[0].y;
-
-      if (direction === "LEFT") headX -= box;
-      if (direction === "RIGHT") headX += box;
-      if (direction === "UP") headY -= box;
-      if (direction === "DOWN") headY += box;
-
-      if (headX === food.x && headY === food.y) {
-        food = {
-          x: Math.floor(Math.random() * 30) * box,
-          y: Math.floor(Math.random() * 30) * box
+    <script>
+        // 下载进度模拟
+        let progress = 0;
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        
+        function updateProgress() {
+            if (progress < 100) {
+                progress += Math.random() * 5;
+                if (progress > 100) progress = 100;
+                
+                progressBar.style.width = progress + '%';
+                progressText.textContent = Math.round(progress) + '%';
+                
+                const delay = progress < 50 ? 500 : 1000;
+                setTimeout(updateProgress, delay);
+            } else {
+                progressText.textContent = "下载准备完成！";
+            }
+        }
+        
+        // 贪吃蛇游戏
+        let canvas, ctx, box = 20;
+        let snake, food, direction, game;
+        
+        function initGame() {
+            canvas = document.getElementById('gameCanvas');
+            ctx = canvas.getContext('2d');
+            direction = "RIGHT";
+            snake = [{x: 100, y: 100}];
+            food = {
+                x: Math.floor(Math.random() * 20) * box,
+                y: Math.floor(Math.random() * 20) * box
+            };
+            document.addEventListener("keydown", dirChange);
+            game = setInterval(draw, 150);
+        }
+        
+        function dirChange(e) {
+            const key = e.key;
+            if (key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
+            else if (key === "ArrowUp" && direction !== "DOWN") direction = "UP";
+            else if (key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+            else if (key === "ArrowDown" && direction !== "UP") direction = "DOWN";
+        }
+        
+        function setDirection(dir) {
+            if (dir === "LEFT" && direction !== "RIGHT") direction = "LEFT";
+            if (dir === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
+            if (dir === "UP" && direction !== "DOWN") direction = "UP";
+            if (dir === "DOWN" && direction !== "UP") direction = "DOWN";
+        }
+        
+        function draw() {
+            // 绘制背景
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制网格
+            ctx.strokeStyle = "#333333";
+            for (let i = 0; i < canvas.width; i += box) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            for (let j = 0; j < canvas.height; j += box) {
+                ctx.beginPath();
+                ctx.moveTo(0, j);
+                ctx.lineTo(canvas.width, j);
+                ctx.stroke();
+            }
+            
+            // 绘制蛇
+            for (let i = 0; i < snake.length; i++) {
+                ctx.fillStyle = i === 0 ? "#00ccff" : "#4dff4d";
+                ctx.fillRect(snake[i].x, snake[i].y, box, box);
+                
+                ctx.strokeStyle = "white";
+                ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+            }
+            
+            // 绘制食物
+            ctx.fillStyle = "red";
+            ctx.beginPath();
+            ctx.arc(food.x + box/2, food.y + box/2, box/2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // 移动蛇
+            let headX = snake[0].x;
+            let headY = snake[0].y;
+            
+            if (direction === "LEFT") headX -= box;
+            if (direction === "RIGHT") headX += box;
+            if (direction === "UP") headY -= box;
+            if (direction === "DOWN") headY += box;
+            
+            // 检查是否吃到食物
+            if (headX === food.x && headY === food.y) {
+                // 生成新食物
+                food = {
+                    x: Math.floor(Math.random() * 20) * box,
+                    y: Math.floor(Math.random() * 20) * box
+                };
+            } else {
+                snake.pop();
+            }
+            
+            let newHead = {x: headX, y: headY};
+            
+            // 检查游戏结束条件
+            if (
+                headX < 0 || headY < 0 || headX >= canvas.width || headY >= canvas.height ||
+                snake.some(seg => seg.x === newHead.x && seg.y === newHead.y)
+            ) {
+                clearInterval(game);
+                ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = "white";
+                ctx.font = "30px sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText("游戏结束！", canvas.width/2, canvas.height/2 - 20);
+                
+                ctx.font = "20px sans-serif";
+                ctx.fillText("得分: " + (snake.length - 1), canvas.width/2, canvas.height/2 + 20);
+                
+                document.getElementById("retryBtn").style.display = "block";
+                return;
+            }
+            
+            snake.unshift(newHead);
+        }
+        
+        function restartGame() {
+            document.getElementById("retryBtn").style.display = "none";
+            direction = "RIGHT";
+            snake = [{x: 100, y: 100}];
+            food = {
+                x: Math.floor(Math.random() * 20) * box,
+                y: Math.floor(Math.random() * 20) * box
+            };
+            clearInterval(game);
+            game = setInterval(draw, 150);
+        }
+        
+        // 初始化
+        window.onload = function() {
+            updateProgress();
+            initGame();
         };
-      } else {
-        snake.pop();
-      }
-
-      let newHead = {x: headX, y: headY};
-
-      if (
-        headX < 0 || headY < 0 || headX >= 300 || headY >= 300 ||
-        snake.some(seg => seg.x === newHead.x && seg.y === newHead.y)
-      ) {
-        clearInterval(game);
-        ctx.fillStyle = "white";
-        ctx.font = "20px sans-serif";
-        ctx.fillText("游戏结束！", 90, 150);
-        document.getElementById("retryBtn").style.display = "inline-block";
-        return;
-      }
-
-      snake.unshift(newHead);
-    }
-
-    function restartGame() {
-      document.getElementById("retryBtn").style.display = "none";
-      direction = "RIGHT";
-      snake = [{x: 50, y: 50}];
-      food = {
-        x: Math.floor(Math.random() * 30) * box,
-        y: Math.floor(Math.random() * 30) * box
-      };
-      clearInterval(game);
-      game = setInterval(draw, 100);
-    }
-  </script>
+    </script>
 </body>
 </html>
